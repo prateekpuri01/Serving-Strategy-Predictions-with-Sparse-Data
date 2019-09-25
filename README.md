@@ -82,7 +82,7 @@ To get a better sense for the model, we can also inspect an AUC curve for a samp
 
 ![](/data_visualizations/risk_strat_predict_ROC.png?raw=true)
 
-# How to determine how much match history is needed for the EM metric to be a reliable classifier?
+# How much match history is needed for the EM metric to be a reliable classifier?
 
 During our classificaiton, we relied on matchup-averaged EM factors. But how much match history do you need to determine if a risky strategy is likely optimal? It's unclear whether an EM factor computed after one match is likely to be reflective of the EM factor that would be obtained from 10+ matches. To address this, I first restricted my data to players who have played each other 15 times. 
 
