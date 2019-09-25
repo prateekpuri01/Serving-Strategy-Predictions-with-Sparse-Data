@@ -1,26 +1,28 @@
-# ATP_strategy_predictions_sparse_data
-I extend my analysis of optimal ATP serving strategies to include prediction for player matchups when data is sparse.
+# ATP_ML_strategy_predictions_sparse_data
+
+In this repository, I detail a recent project where I constructed a machine learning model to predict what serving strategy is optimal for a given ATP player, even when playing an opponent he has never faced before. 
+
 Several of the concepts mentioned in this document have been desribed extensively in the following repository: https://github.com/prateekpuri01/ATP_serving_strategy. Please refer to this page for clarification.
 
 Here is a list of acronyms that will be used in this document:
 
-**FSP** - first serve make percentage <br/>
-**SSP** - second serve make percentage <br/>
-**FSWP** - percentage of points that are won when a server makes his first serve <br/>
-**SSWP** - percentage of points that are won when a server makes his second serve <br/>
-**EM** - FSP*FSWP-SSP*SSWP <br/>
+**FSP**: first serve make percentage <br/>
+**SSP**: second serve make percentage <br/>
+**FSWP**: percentage of points that are won when a server makes his first serve <br/>
+**SSWP**: percentage of points that are won when a server makes his second serve <br/>
+**EM**: FSP*FSWP-SSP*SSWP <br/>
 
-As detailed in the above-linked repository, previously I collected data on how well a particular player served (FSWP, SSWP, SSP,FSP) against all other players he has played against in his career in order to identify player matchups in which the player could benefit from a 'risky' strategy. A 'risky' strategy is defined as one where a player hits two first serves on all points instead of the conventional 'safe' strategy of hitting a first serve followed by a second serve. The optimal choice of strategy was found to be heavily opponent-dependent, and thus, this analysis required pooling a player's previous match statistics against other players in order to make a prediction. 
+As described in another repository, previously I collected data on how successfully a player served (FSWP, SSWP, SSP,FSP) against particular opponents in order to identify player matchups in which the player could benefit from a 'risky' strategy. A 'risky' strategy is defined as one where a player hits two first serves on all points instead of the conventional 'safe' strategy of hitting a first serve followed by a second serve. Whether a 'risky' or 'safe' strategy is optimal for a given matchup was found to be heavily opponent-dependent. Thus, making strategy predictions required collecting serving statistics from a player's previous matches against an opponent.
 
-But how can we make predictions when such information is unavailable?
+But how can we make strategy predictions when such information is unavailable? This situation arises often when a player is playing a particular opponent for the first time. 
 
 To make predictions for when a player (P1) should go 'risky' against a certain opponent (call him P2), I followed the following roadmap:
 
-1) I first collected matchup data for all matchups with match lengths greater than 3 involving P2 (see below for why 3 was chosen as a cutoff). This pool of players will be denoted as P_ML.
+1) I first collected match statistics for all player matchups involving P2 with total match lengths greater than 3  (see below for why 3 was chosen as a cutoff). This pool of players will be denoted as P_ML.
 
 2) I then classified each player in P_ML as either 'risky' or 'bold' based on their EM factors with P2. 
 
-3) I then trained a Logistic Regression model using a set of features obtained for each player in P_ML, and then optimized the model coefficients using cross-validation/grid search methods. I then used the optimized classifier to make predictions on whether P1 (no previous matches with P2) could benefit from a risky strategy. In particular, my model identified players in P_ML who had features similar to P1, and then classified P1 based on the classifications of this subset of P_ML. 
+3) I then trained a Logistic Regression model using a set of features constructed for each player in P_ML, and then I optimized the model regularization coefficients using cross-validation/grid search methods. I then used the optimized classifier to make predictions on whether P1 (no previous matches with P2) could benefit from a risky strategy. In particular, my model identified players in P_ML who had features similar to P1, and then classified P1 based on the classifications of this subset of P_ML. 
 
 The process was repeated for each potential opponent who has been ranked in the top 30 and is currently active. Below I give a brief explanation of the various steps involved in the process.
 
@@ -33,9 +35,9 @@ From previous work, we have two indications of whether a player is likely to ben
 
 If either of these quantities is > 0, the matchup is classified as benefiting from a risky strategy. 
 
-(2) is more robust than (1) in that the MC simulations consider factors such as player's first and second serve make percentages and subtle effects in the structure of tennis matches. However, the MC simulations are time consuming to produce and were only performed for players with a matchup history of at least five matches with a particular opponent. The reduced sample size also reduces the number of training points that will be available for our machine learning model. On the other hand, EM factors may be a less rigorous classification metric but are easy and quick to compute for all matchups in the ATP database. 
+(2) is more robust than (1) in that the MC simulations consider factors such as player's FSP and SSP distributions as well as subtle effects in the structure of tennis matches. However, the MC simulations are time consuming to produce and were only performed for players with a matchup history of at least five matches with a particular opponent. This reduced sample size also reduces the number of training points that will be available for a machine learning model based on this classification scheme. On the other hand, EM factors may be a less rigorous classification metric but are easy and quick to compute for all matchups in the ATP database. 
 
-Moreover, upon further analysis, 94% of the classifications based on MC predictions match the classifications of the EM predictions. Given this agreement, EM factors were used for classification to increase training points and eventual ML model accuracy. 
+Moreover, upon further analysis, 94% of the classifications based on MC predictions match the classifications of the EM metric. Given this agreement, EM factors were used as classification metrics in our ML model to increase training points and eventual ML model accuracy. 
 
 # Producing the machine learning model
 
@@ -43,7 +45,7 @@ Here are the steps taken in producing the machine learning model
 
 **Goal**: Construct a classifier that can predict if a player (P1) who has never played an opponent (P2) will benefit from a risky strategy. 
 
-**Step 1**: Identify all players who have a matchup history of at least 3 matches with P2. Call this set of players P_ML. If size(P_ML) <15, select another P2 to ensure we will have enough training points.  
+**Step 1**: Identify all players who have a matchup history of at least 3 matches with P2. Call this set of players P_ML. If size(P_ML) <15, select another P2 to ensure we will have enough ML model training points.  
 
 **Step 2**: Calculate the matchup EM factor of all players in P_ML when playing P2. If EM>0, classify the player as 'risky'; if EM<=0 classify as 'safe'.
 
@@ -56,7 +58,7 @@ SSP*SSWP <br/>
 
 These values are the features that will define the player. If a player does not have a matchup history with a player in P_active, list these values as zero. 
 
-Once these features have been computed for every player, remove feature columns that contain all zeroes - this effectively removes matchup statistics for players in P_active who have not played anyone in P_ML.
+Once these features have been computed for every player, store them as rows in a Pandas dataframe. Remove feature columns that contain all zeroes - this effectively removes matchup statistics for players in P_active who have not played anyone in P_ML.
 
 **Step 4**: Split the above data into test and train sets (25/75 split, respectively). Initialize a Logistic Regression (LR) classifier, and perform a grid search for regularization paramter optimization, benchmarked by accuracy scores. During the grid search use a cv parameter of 3. 
 
@@ -69,13 +71,14 @@ Once these features have been computed for every player, remove feature columns 
 
 # Evaluating the machine learning model
 
-The following plot demonstrates the test-set accuracy scores for the LR models for all players in P_active as well as the scores for the simple dummy classifier. As seen from the plot, the two distributions are distinct at the 1% confidence level. 
+The following plot displays the test-set accuracy score distribution for the LR models for all players in P_active as well as the analagous distribution for the simple dummy classifier. As seen from the plot, the two distributions are distinct at the 1% confidence level. 
 
 ![](/data_visualizations/LR_vs_dummy_accuracy_score.png?raw=true)
 
 Of course, there are a few situations in which the LR is outperformed by even the dummy classifier. This is expected since the number of training points can sometimes be ~10, which is insufficient to produce reliable results, especially with feature vector sizes of ~100. 
 
-However, by selecting models who outperformed the dummy classifier by at least 10% (accuracy score), we can list the top 5 player matchups where a player is expected to benefit from a risky strategy, ranked by LR classification probability. Also, I restricted this list to include only models where the train score and the test score were within 10% of one another. This was done to reduce the presence of overfit models since overfitting is a concern here, especially when the number of training points is less than 20 or so. 
+Below, we list the top 5 player matchups where a player who has never played an opponent is expected to benefit from a risky strategy, ranked by LR classification probability. Here, we only consider opponents whose LR model outperformed the dummy classifier by at least 10% (accuracy score). Also, I only included models whose train score and test score were within 10% of one another. This was done to reduce the presence of overfit models since overfitting is a concern here, especially when the number of training points is less than 20 or so. 
+
 ![](/data_visualizations/strat_predictions_table.png?raw=true)
 
 To get a better sense for the model, we can also inspect an AUC curve for a sample player in our dataset, Kei Nishikori.
@@ -84,19 +87,19 @@ To get a better sense for the model, we can also inspect an AUC curve for a samp
 
 # How much match history is needed for the EM metric to be a reliable classifier?
 
-During our classificaiton, we relied on matchup-averaged EM factors. But how much match history do you need to determine if a risky strategy is likely optimal? It's unclear whether an EM factor computed after one match is likely to be reflective of the EM factor that would be obtained from 10+ matches. To address this, I first restricted my data to players who have played each other 15 times. 
+When calibrating our ML model, we relied on matchup-averaged EM factors to make train/test point classificaitons. But how much match history do you need to determine if a risky strategy is likely optimal? It's unclear whether an EM factor computed after one match is likely to be reflective of the EM factor that would be obtained from 10+ matches. To address this, I considered matchup data from players who have played each other at least 15 times. 
 
-I then calculated the EM factor for each match in the matchup history. Afterwards, I calculated what the matchup averaged EM factor was *as a function of the number of matches included in the average* (0-15). I could then compare these individual values to the 15-match-averged EM factor. This gives me a sense of how quickly the EM factors converged to their average value as the match history evolved between two players. I was most interested in determining how many matches it took for the average EM factor to converge to being the same sign (positive or negative) as the 15-match average. This is relevant since whether EM>0 determines the classification for each player in the ML model. 
+I calculated the EM factor for each match in the matchup history. Afterwards, I calculated what the match-averaged EM factor was *as a function of the number of matches included in the average* (0-15). I could then compare these individual values to the 15-match-averged EM factor. This gives me a sense of how quickly the EM factors converged to their average value as the match history evolved between two players. I was most interested in determining how many matches it took for the average EM factor to converge to being the same sign (positive or negative) as the 15-match average. This is relevant since whether EM>0 determines the classification for each player in the ML model. 
 
 The following plot displays this convergence curve along with the mean accuracy of the LR model. As can be seen from the plot, after 3 matches, in 70% of cases, the classification prediction has converged to what the eventual 15-match classification would be. 
 
 ![](/data_visualizations/strategy_convergence.png?raw=true)
 
-Given that our ML models have a mean accuracy score of 75%, we can estimate that if a player has played less than two matches versus a particular opponent, the LR model may provide a better estimate of which strategy is preferable than his own limited match statistics against that player would imply.
+Given that our ML models have a mean accuracy score of 75%, we estimate that if a player has played less than two matches versus a particular opponent, the LR model may provide a better estimate of which strategy is preferable than his own limited match statistics against that player would imply.
 
-As a side note, I calculated the EM factors here by averaging the EM factor from each individual match in a given matchup. However, in the classification metric used in the ML model, I'm actually considering the EM factor averaged across *all points* that have been played in the matchup. These two quantities are slightly different since there are a different number of points in each match. However, I verified that the two averages produce the same classification ('risky' vs 'safe') in over 90% of cases when considering the full history in a particular matchup, and thus their convergence rates are likely fairly similar as well. Convergence curves as a function of points played were more difficult to produce for technical reasons and were neglected here. 
+As a side note, I calculated the average EM factors here by averaging the EM factor from each individual match in a given matchup. However, in the classification metric used in the ML model, I'm actually considering the EM factor averaged across *all points* that have been played in the matchup. These two quantities are slightly different since there are a different number of points in each match. However, I verified that the two averages produce the same classification ('risky' vs 'safe') in over 90% of cases when considering the full history in a particular matchup, and thus their convergence rates are likely fairly similar as well. Convergence curves as a function of points played were more difficult to produce for technical reasons and were not pursured here. 
 
-There are pros and cons to using point-averaged and match-averaged EM factors for classificaitons; however point averages were chosen in my approach. 
+In reality, there are pros and cons to using point-averaged and match-averaged EM factors for classificaitons; however point averages were chosen in my approach. 
 
 
 # Replacing Monte Carlo Modeling: Using Machine Learning instead
