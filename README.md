@@ -3,11 +3,11 @@ I extend my analysis of optimal ATP serving strategies to include prediction for
 
 Here is a list of acronyms that will be used in this document:
 
-FSP - first serve make percentage
-SSP - second serve make percentage
-FSWP - percentage of points that are won when a server makes his first serve
-SSWP - percentage of points that are won when a server makes his second serve
-EM - FSP*FSWP-SSP*SSWP
+FSP - first serve make percentage <br/>
+SSP - second serve make percentage <br/>
+FSWP - percentage of points that are won when a server makes his first serve <br/>
+SSWP - percentage of points that are won when a server makes his second serve <br/>
+EM - FSP*FSWP-SSP*SSWP <br/>
 
 As a reminder, as detailed in another repository, previously I collected data on how well a particular player served (FSWP, SSWP, SSP,FSP) against all other players he has played against in his career in order to identify player matchups in which the player could benefit from a 'risky' strategy. A 'risky' strategy is defined as one where a player hits two first serves on all points instead of the conventional 'safe' strategy of hitting a first serve followed by a second serve. The optimal choice of strategy was found to be heavily opponent-dependent, and thus, this analysis required pooling a player's previous match statistics against other players in order to make a prediction. 
 
@@ -47,8 +47,8 @@ Here are the steps taken in producing the machine learning model
 
 Consider the matchups between all players in P_active for a given player in P_ML and compute the following quantities for each matchup:
 
-FSP*FSWP
-SSP*SSWP
+FSP*FSWP <br/>
+SSP*SSWP <br/>
 
 These values are the features that will define the player. If a player does not have a matchup history with a player in P_active, list these values as zero. 
 
@@ -72,9 +72,7 @@ The following plot demonstrates the test-set accuracy scores for the LR models f
 Of course, there are a few situations in which the LR is outperformed by even the dummy classifier. This is expected since the number of training points can sometimes be ~10, which is insufficient to produce reliable results, especially with feature vector sizes of ~100. 
 
 However, by selecting models who outperformed the dummy classifier by at least 10% (accuracy score), we can list the top 5 player matchups where a player is expected to benefit from a risky strategy, ranked by LR classification probability. Also, I restricted this list to include only models where the train score and the test score were within 10% of one another. This was done to reduce the presence of overfit models since overfitting is a concern here, especially when the number of training points is less than 20 or so. 
-
 ![](/data_visualizations/strat_predictions_table.png?raw=true)
-
 To get a better sense for the model, we can also inspect an AUC curve for a sample player in our dataset, Kei Nishikori.
 
 ![](/data_visualizations/risk_strat_predict_ROC.png?raw=true)
