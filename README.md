@@ -56,7 +56,7 @@ Consider the matchups between all players in P_active for a given player in P_ML
 FSP x FSWP <br/>
 SSP x SSWP <br/>
 
-These values are the features that will define the player. If a player does not have a matchup history with a player in P_active, list these values as zero. 
+These are the feature values that will define the player. If a player does not have a matchup history with a player in P_active, list these values as zero. 
 
 Once these features have been computed for every player, store them as rows in a Pandas dataframe. Remove feature columns that contain all zeroes - this effectively removes matchup statistics for players in P_active who have not played anyone in P_ML.
 
@@ -64,7 +64,7 @@ Once these features have been computed for every player, store them as rows in a
 
 **Step 5**: Train the model on the training data using optimized parameters and then generate an accuracy score for the test data (which has been shielded from model up until this point)
 .
-**Step 6**: Also construct a stratified dummy classifier and apply the classifier to the test data for model evaluation purposes. 
+**Step 6**: Also construct a stratified dummy classifier and apply the classifier to the test data for model evaluation purposes. <br/>
 
 **Step 7**: Repeat process for every P2 within the set P_active
 
