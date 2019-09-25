@@ -3,11 +3,11 @@ I extend my analysis of optimal ATP serving strategies to include prediction for
 
 Here is a list of acronyms that will be used in this document:
 
-FSP - first serve make percentage <br/>
-SSP - second serve make percentage <br/>
-FSWP - percentage of points that are won when a server makes his first serve <br/>
-SSWP - percentage of points that are won when a server makes his second serve <br/>
-EM - FSP*FSWP-SSP*SSWP <br/>
+**FSP** - first serve make percentage <br/>
+**SSP** - second serve make percentage <br/>
+**FSWP** - percentage of points that are won when a server makes his first serve <br/>
+**SSWP** - percentage of points that are won when a server makes his second serve <br/>
+**EM** - FSP*FSWP-SSP*SSWP <br/>
 
 As a reminder, as detailed in another repository, previously I collected data on how well a particular player served (FSWP, SSWP, SSP,FSP) against all other players he has played against in his career in order to identify player matchups in which the player could benefit from a 'risky' strategy. A 'risky' strategy is defined as one where a player hits two first serves on all points instead of the conventional 'safe' strategy of hitting a first serve followed by a second serve. The optimal choice of strategy was found to be heavily opponent-dependent, and thus, this analysis required pooling a player's previous match statistics against other players in order to make a prediction. 
 
