@@ -87,7 +87,7 @@ To get a better sense for the model, we can also inspect an AUC curve for a samp
 
 # How much match history is needed for the EM metric to be a reliable classifier?
 
-When calibrating our ML model, we relied on matchup-averaged EM factors to make train/test point classificaitons. But how much match history do you need to determine if a risky strategy is likely optimal? It's unclear whether an EM factor computed after one match is likely to be reflective of the EM factor that would be obtained from 10+ matches. To address this, I considered matchup data from players who have played each other at least 15 times. 
+When calibrating our ML model, we relied on matchup-averaged EM factors to make train/test point classificaitons. But how much match history do you need to determine if a risky strategy is likely optimal? It's unclear whether an EM factor computed after one match is likely to be reflective of the average EM factor that would be obtained from 10+ matches. To address this, I considered matchup data from players who have played each other at least 15 times. 
 
 I calculated the EM factor for each match in the matchup history. Afterwards, I calculated what the match-averaged EM factor was *as a function of the number of matches included in the average* (0-15). I could then compare these individual values to the 15-match-averged EM factor. This gives me a sense of how quickly the EM factors converged to their average value as the match history evolved between two players. I was most interested in determining how many matches it took for the average EM factor to converge to being the same sign (positive or negative) as the 15-match average. This is relevant since whether EM>0 determines the classification for each player in the ML model. 
 
