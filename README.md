@@ -73,6 +73,7 @@ Of course, there are a few situations in which the LR is outperformed by even th
 
 However, by selecting models who outperformed the dummy classifier by at least 10% (accuracy score), we can list the top 5 player matchups where a player is expected to benefit from a risky strategy, ranked by LR classification probability. Also, I restricted this list to include only models where the train score and the test score were within 10% of one another. This was done to reduce the presence of overfit models since overfitting is a concern here, especially when the number of training points is less than 20 or so. 
 ![](/data_visualizations/strat_predictions_table.png?raw=true)
+
 To get a better sense for the model, we can also inspect an AUC curve for a sample player in our dataset, Kei Nishikori.
 
 ![](/data_visualizations/risk_strat_predict_ROC.png?raw=true)
