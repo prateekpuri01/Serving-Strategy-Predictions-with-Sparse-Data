@@ -1,5 +1,6 @@
 # ATP_strategy_predictions_sparse_data
 I extend my analysis of optimal ATP serving strategies to include prediction for player matchups when data is sparse.
+Several of the concepts mentioned in this document have been desribed extensively in the following repository: https://github.com/prateekpuri01/ATP_serving_strategy. Please refer to this page for clarification.
 
 Here is a list of acronyms that will be used in this document:
 
@@ -9,27 +10,30 @@ Here is a list of acronyms that will be used in this document:
 **SSWP** - percentage of points that are won when a server makes his second serve <br/>
 **EM** - FSP*FSWP-SSP*SSWP <br/>
 
-As a reminder, as detailed in another repository, previously I collected data on how well a particular player served (FSWP, SSWP, SSP,FSP) against all other players he has played against in his career in order to identify player matchups in which the player could benefit from a 'risky' strategy. A 'risky' strategy is defined as one where a player hits two first serves on all points instead of the conventional 'safe' strategy of hitting a first serve followed by a second serve. The optimal choice of strategy was found to be heavily opponent-dependent, and thus, this analysis required pooling a player's previous match statistics against other players in order to make a prediction. 
+As detailed in the above-linked repository, previously I collected data on how well a particular player served (FSWP, SSWP, SSP,FSP) against all other players he has played against in his career in order to identify player matchups in which the player could benefit from a 'risky' strategy. A 'risky' strategy is defined as one where a player hits two first serves on all points instead of the conventional 'safe' strategy of hitting a first serve followed by a second serve. The optimal choice of strategy was found to be heavily opponent-dependent, and thus, this analysis required pooling a player's previous match statistics against other players in order to make a prediction. 
 
 But how can we make predictions when such information is unavailable?
 
-To make predictions for when a player should go 'risky' against a certain opponent (call him P2), I followed the following roadmap:
+To make predictions for when a player (P1) should go 'risky' against a certain opponent (call him P2), I followed the following roadmap:
 
 1) I first collected matchup data for all matchups with match lengths greater than 3 involving P2 (see below for why 3 was chosen as a cutoff). This pool of players will be denoted as P_ML.
 
 2) I then classified each player in P_ML as either 'risky' or 'bold' based on their EM factors with P2. 
 
-3) I then trained a Logistic Regression model using a set of features obtained for each player in P_ML, and then optimized the model coefficients using cross-validation/grid search methods. I then used the optimized classifier to make predictions for when other players not included in P_ML (no previous matches with the P2) could benefit from a risky strategy. 
+3) I then trained a Logistic Regression model using a set of features obtained for each player in P_ML, and then optimized the model coefficients using cross-validation/grid search methods. I then used the optimized classifier to make predictions on whether P1 (no previous matches with P2) could benefit from a risky strategy. In particular, my model identified players in P_ML who had features similar to P1, and then classified P1 based on the classifications of this subset of P_ML. 
 
 The process was repeated for each potential opponent who has been ranked in the top 30 and is currently active. Below I give a brief explanation of the various steps involved in the process.
 
 # Classifying which players would benefit from a risky strategy
 
-From previous work, we have two indications of whether a player is likely to benefit from a risky serve strategy against a certain player: (1) their matchup EM factor (2) the win percentage enhancement expected from switching to a risky strategy as predicted from a Monte Carlo (MC) simulation. 
+From previous work, we have two indications of whether a player is likely to benefit from a risky serve strategy against a certain player: 
+
+(1) their matchup EM factor <\br>
+(2) the win percentage enhancement expected from switching to a risky strategy as predicted from a Monte Carlo (MC) simulation <\br>
 
 If either of these quantities is > 0, the matchup is classified as benefiting from a risky strategy. 
 
-(2) is more robust in that the MC simulations consider factors such as player's first and second serve make percentages and subtle effects in the structure of tennis matches. However, the MC simulations are time consuming to produce and were only performed for players with a matchup history of at least five matches with a particular opponent. The reduced sample size also reduces the number of training points that will be available for our machine learning model. On the other hand, EM factors may be a less rigorous classification metric but are easy and quick to compute for all matchups in the ATP database. 
+(2) is more robust than (1) in that the MC simulations consider factors such as player's first and second serve make percentages and subtle effects in the structure of tennis matches. However, the MC simulations are time consuming to produce and were only performed for players with a matchup history of at least five matches with a particular opponent. The reduced sample size also reduces the number of training points that will be available for our machine learning model. On the other hand, EM factors may be a less rigorous classification metric but are easy and quick to compute for all matchups in the ATP database. 
 
 Moreover, upon further analysis, 94% of the classifications based on MC predictions match the classifications of the EM predictions. Given this agreement, EM factors were used for classification to increase training points and eventual ML model accuracy. 
 
