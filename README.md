@@ -48,23 +48,31 @@ Step 6: Also construct a stratified dummy classifier, and apply the classifier t
 Step 7: Repeat process for every P2 within the set P_active
 
 
-# Producing the machine learning model
+# Evauluating the machine learning model
 
 The following plot demonstrates the accuracy score for the LR models for all players in P_active as well as the scores for the simple dummy classifier. As seen from the plot, the two distributions are distinct at the 1% confidence level. 
 
+![](/data_visualizations/LR_vs_dummy_accuracy_score.png?raw=true)
+
 Of course there are a few situations in which the LR is outperformed by even the dummy classifier. This is expected since the number of training points can sometimes be ~10, which is insufficient to produce reliable results, especially with feature sizes of ~100. 
 
-However, by selecting models who outperformed the dummy classifier by at least 10% (accuracy score), we can list the top 10 player matchups where a player is expected to benefit from a risky strategy, ranked by the value or the LR classificaiton probability. Also, I restricted this list to include only models where the train score and the test score were within 20% of one another. This was done to reduce the presence of overfit models since overfitting is a concern here, especially when the number of training points is less than 20 or so. 
+However, by selecting models who outperformed the dummy classifier by at least 10% (accuracy score), we can list the top 5 player matchups where a player is expected to benefit from a risky strategy, ranked by the value or the LR classificaiton probability. Also, I restricted this list to include only models where the train score and the test score were within 10% of one another. This was done to reduce the presence of overfit models since overfitting is a concern here, especially when the number of training points is less than 20 or so. 
 
-We can also inspect a AUC curve for a sample player in our dataset, Kei Nishikori.
+![](/data_visualizations/strat_predictions_table.png?raw=true)
 
+To get a better sense for the model, we can also inspect a AUC curve for a sample player in our dataset, Kei Nishikori.
 
+![](/data_visualizations/risk_strat_predict_ROC.png?raw=true)
 
 # How to determine how much match history is needed for the EM metric to be a reliable classifier?
 
 How much match history do you need to determine if a risky strategy is actually likely optimal? It's unclear whether an EM factor computed after one match is likely to be reflective of the EM factor that would be obtained from 10+ matches. To address this, I first restricted my data to players who have played each other 15 times. I calculated the EM factor for each match and then calculated what the matchup averaged EM factor was as a function of number of matches included in the average (0-15). I could then compare these values to the EM factor averaged over the first 15 values in each matchup. This gives me a sense of how quickly the EM factors converged to their average value as the match history evolved between two players. I was most interested in determining how many matches it took for the average EM factor to converge to being the same sign (positive or negative) and the 15 match average. Since is relevant since whether EM>0 determine the classificaiton for each player in the ML model. 
 
 The following plot displays this convergence curve along with the mean accuracy of the LR model. As can be seen from the plot, after 3 matches, in 70% of cases, the classification has converged to what its 15-match classification would be. 
+
+![](/data_visualizations/strategy_convergence.png?raw=true)
+
+Given that our ML models have a mean accuracy score of 75%, we can estimate that if a player has played less than two matches versus a particular opponent, the LR model may provide a better estimate of which strategy is preferable than his own limited match statistics against that player would imply.
 
 As a side note here, I calculated the EM factors here by averaging the EM factor from each individual match in a given matchup. However, in my classification metric, I'm actually considering the EM factor averaged across *all points* in a given matchup. These two quantities are slightly different since there are a different number of points in each match. However, I verified that the two averages produce the same classificaiton ('risky' vs 'safe') in over 90% of cases. The match-averaged values are easier to consider since they allow for simple filtering of player matchup when constructing the ML model, so they were employed here for convenience.
 
@@ -82,11 +90,16 @@ P2 SSP*SSWP
 
 Each matchup was also classified by a corresponding win percentage for P1. Using the winning percentage as a classifier, I split my data into training and test sets and fit the Linear Regression model to the training data. I then compare the test data predictions to test data actual winning percentages, with an R^2 value of 0.79, as compared to the MC R^2 value of 0.85.
 
+![](/data_visualizations/ML_vs_WLR_calibration.png?raw=true)
+
 This machine learning model was extremely quick to implement as compared to the MC method (seconds vs. hours), and produced similarly accurate results. 
 
 Of course what I would really like do is change the feature values (SSP*SSWP->FSP*FSWP) to account for risky serving strategies and then see if my model can produce reliable, updated win percentages. 
 
 I performed such a calculation and compared the results to the win percentage difference expected by my MC model. The plot below comapres the two results, with an R^2 value of 0.83. Thus, it seems like the machine learning model was able to reproduce the Monte Carlo results with reasonable accuracy while shedding hours of computation time. 
+
+![](/data_visualizations/ML_vs_MC_calibration.png?raw=true)
+
 
 
 
