@@ -62,8 +62,8 @@ Once these features have been computed for every player, store them as rows in a
 
 **Step 4**: Split the above data into test and train sets (25/75 split, respectively). Initialize a Logistic Regression (LR) classifier, and perform a grid search for regularization paramter optimization, benchmarked by accuracy scores. During the grid search use a cv parameter of 3. 
 
-**Step 5**: Train the model on the training data using optimized parameters and then generate an accuracy score for the test data (which has been shielded from model up until this point) <br/>
-.
+**Step 5**: Train the model on the training data using optimized parameters and then generate an accuracy score for the test data (which has been shielded from model up until this point). <br/>
+
 **Step 6**: Also construct a stratified dummy classifier and apply the classifier to the test data for model evaluation purposes. <br/>
 
 **Step 7**: Repeat process for every P2 within the set P_active
