@@ -30,8 +30,8 @@ The process was repeated for each potential opponent who has been ranked in the 
 
 From previous work, we have two indications of whether a player is likely to benefit from a risky serve strategy against a certain player: 
 
-(1) their matchup EM factor <\br>
-(2) the win percentage enhancement expected from switching to a risky strategy as predicted from a Monte Carlo (MC) simulation <\br>
+(1) their matchup EM factor <br/>
+(2) the win percentage enhancement expected from switching to a risky strategy as predicted from a Monte Carlo (MC) simulation <br/>
 
 If either of these quantities is > 0, the matchup is classified as benefiting from a risky strategy. 
 
@@ -53,7 +53,7 @@ Here are the steps taken in producing the machine learning model
 
 Consider the matchups between all players in P_active for a given player in P_ML and compute the following quantities for each matchup:
 
-FSP x FSW/P <br/>
+FSP x FSWP <br/>
 SSP x SSWP <br/>
 
 These values are the features that will define the player. If a player does not have a matchup history with a player in P_active, list these values as zero. 
@@ -109,10 +109,10 @@ I therfore tried to replace the MC classification with a Linear Regression ML mo
 
 I once again considered all top-30 active player matchups (P1 vs P2). For each matchup I calculated the following features
 
-P1 FSP*FSWP
-P1 SSP*SSWP
-P2 FSP*FSWP
-P2 SSP*SSWP
+P1 FSP x FSWP <br/>
+P1 SSP x SSWP <br/>
+P2 FSP x FSWP <br/>
+P2 SSP x SSWP <br/>
 
 Each matchup was also classified by a corresponding win percentage for P1. Using the winning percentage as a classifier, I split my data into training and test sets and fit the Linear Regression model to the training data. I then compared the test data predictions to the test data actual winning percentages, resulting in an R^2 value of 0.79, as compared to the MC model R^2 value of 0.85.
 
