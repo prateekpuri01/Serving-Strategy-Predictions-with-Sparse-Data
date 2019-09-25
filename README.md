@@ -53,8 +53,8 @@ Here are the steps taken in producing the machine learning model
 
 Consider the matchups between all players in P_active for a given player in P_ML and compute the following quantities for each matchup:
 
-FSP*FSWP <br/>
-SSP*SSWP <br/>
+FSP x FSW/P <br/>
+SSP x SSWP <br/>
 
 These values are the features that will define the player. If a player does not have a matchup history with a player in P_active, list these values as zero. 
 
@@ -120,7 +120,7 @@ Each matchup was also classified by a corresponding win percentage for P1. Using
 
 This machine learning model was extremely quick to implement as compared to the MC method (seconds vs. hours) and produced similarly accurate results. 
 
-Of course, what I would really like do is change the feature values (SSP*SSWP->FSP*FSWP) to account for risky serving strategies and then see if my model can produce reliable, updated win percentages. 
+Of course, what I would really like do is change the feature values (SSP x SSWP --> FSP x FSWP) to account for risky serving strategies and then see if my model can produce reliable, updated win percentages. 
 
 I performed such a calculation and compared the results to the win percentage difference expected by my MC model. The plot below compares the two results, with an R^2 value of 0.83. Thus, it seems like the machine learning model was able to reproduce the Monte Carlo results with reasonable accuracy while shedding hours of computation time. 
 
