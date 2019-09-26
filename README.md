@@ -73,11 +73,11 @@ Once these features have been computed for every player, store them as rows in a
 
 The following plot displays the test-set accuracy score distribution for the different ML models for all players in P_active as well as the analagous distribution for the simple dummy classifier. As seen from the plot, the ML distributions and the Dummy Classifier are distinct at the 1% confidence level. 
 
-![](/data_visualizations/LR_vs_dummy_accuracy_score.png?raw=true)
+![](/data_visualizations/ML_vs_dummy_accuracy_scores.png?raw=true)
 
 Of course, there are a few situations in which the ML models are outperformed by even the dummy classifier. This is expected since the number of training points can sometimes be ~10, which is insufficient to produce reliable results, especially with feature vector sizes of ~100. The three ML models produced similar accuracies but the RFC model will be further analyzed since it's performance was marginally best, on average. 
 
-Below, we list the top 5 player matchups where a player who has never played an opponent is expected to benefit from a risky strategy, ranked by the RFC classification probability. Here, we only consider opponents whose RFC model outperformed the dummy classifier by at least 10% (accuracy score). Also, I only included models whose train score and test score were within 10% of one another. This was done to reduce the presence of overfit models since overfitting is a concern here, especially when the number of training points is less than 20 or so. 
+Below, we list the top 10 player matchups where a player who has never played an opponent is expected to benefit from a risky strategy, ranked by the mean probability probability of all three machine learning models. Here, I only included player models whose train score and test score were within 30% of one another. This was done to reduce the presence of extremely overfit models since overfitting is a concern here, especially when the number of training points is less than 20 or so. 
 
 ![](/data_visualizations/strat_predictions_table.png?raw=true)
 
