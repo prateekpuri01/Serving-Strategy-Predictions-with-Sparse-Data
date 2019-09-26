@@ -75,9 +75,9 @@ The following plot displays the test-set accuracy score distribution for the dif
 
 ![](/data_visualizations/ML_vs_dummy_accuracy_scores.png?raw=true)
 
-Of course, there are a few situations in which the ML models are outperformed by even the dummy classifier. This is expected since the number of training points can sometimes be ~10, which is insufficient to produce reliable results, especially with feature vector sizes of ~100. The three ML models produced similar accuracies but the RFC model will be further analyzed since it's performance was marginally best, on average. 
+Of course, there are a few situations in which the ML models are outperformed by even the dummy classifier. This is expected since the number of training points can sometimes be ~10, which is insufficient to produce reliable results, especially with feature vector sizes of ~100. As can be seen from the plot, the three ML models produced similar accuracies.
 
-Below, we list the top 10 player matchups where a player who has never played an opponent is expected to benefit from a risky strategy, ranked by the mean probability probability of all three machine learning models. Here, I only included player models whose train score and test score were within 30% of one another. This was done to reduce the presence of extremely overfit models since overfitting is a concern here, especially when the number of training points is less than 20 or so. 
+Below, we list the top player matchups where a player who has never played an opponent is expected to benefit from a risky strategy, ranked by the mean classification probability probability from of all three machine learning models. 
 
 ![](/data_visualizations/model_av_strat_predictions_table.png?raw=true)
 
@@ -88,11 +88,11 @@ When calibrating our ML model, we relied on matchup-averaged EM factors to make 
 
 I calculated the EM factor for each match in the matchup history. Afterwards, I calculated what the match-averaged EM factor was *as a function of the number of matches included in the average* (0-15). I could then compare these individual values to the 15-match-averged EM factor. This gives me a sense of how quickly the EM factors converged to their average value as the match history evolved between two players. I was most interested in determining how many matches it took for the average EM factor to converge to being the same sign (positive or negative) as the 15-match average. This is relevant since whether EM>0 determines the classification for each player in the ML model. 
 
-The following plot displays this convergence curve along with the mean accuracy of the RFC model. As can be seen from the plot, after 3 matches, in 70% of cases, the classification prediction has converged to what the eventual 15-match classification would be. 
+The following plot displays this convergence curve along with the mean accuracy of the LR model. As can be seen from the plot, after 3 matches, in 70% of cases, the classification prediction has converged to what the eventual 15-match classification would be. 
 
 ![](/data_visualizations/strategy_convergence.png?raw=true)
 
-Given that our ML models have a mean accuracy score of 75%, we estimate that if a player has played less than two matches versus a particular opponent, the RFC model may provide a better estimate of which strategy is preferable than his own limited match statistics against that player would imply.
+Given that our ML models have a mean accuracy score of 75%, we estimate that if a player has played less than two matches versus a particular opponent, the LR model may provide a better estimate of which strategy is preferable than his own limited match statistics against that player would imply.
 
 As a side note, I calculated the average EM factors here by averaging the EM factor from each individual match in a given matchup. However, in the classification metric used in the ML model, I'm actually considering the EM factor averaged across *all points* that have been played in the matchup. These two quantities are slightly different since there are a different number of points in each match. However, I verified that the two averages produce the same classification ('risky' vs 'safe') in over 90% of cases when considering the full history in a particular matchup, and thus their convergence rates are likely fairly similar as well. Convergence curves as a function of points played were more difficult to produce for technical reasons and were not pursured here. 
 
