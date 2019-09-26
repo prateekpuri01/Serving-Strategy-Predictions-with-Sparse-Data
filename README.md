@@ -79,11 +79,8 @@ Of course, there are a few situations in which the ML models are outperformed by
 
 Below, we list the top 10 player matchups where a player who has never played an opponent is expected to benefit from a risky strategy, ranked by the mean probability probability of all three machine learning models. Here, I only included player models whose train score and test score were within 30% of one another. This was done to reduce the presence of extremely overfit models since overfitting is a concern here, especially when the number of training points is less than 20 or so. 
 
-![](/data_visualizations/strat_predictions_table.png?raw=true)
+![](/data_visualizations/model_av_strat_predictions_table.png?raw=true)
 
-To get a better sense for the model, we can also inspect an AUC curve for a sample player in our dataset, Kei Nishikori.
-
-![](/data_visualizations/risk_strat_predict_ROC.png?raw=true)
 
 # How much match history is needed for the EM metric to be a reliable classifier?
 
