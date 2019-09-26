@@ -77,7 +77,7 @@ The following plot displays the test-set accuracy score distribution for the dif
 
 Of course, there are a few situations in which the ML models are outperformed by even the dummy classifier. This is expected since the number of training points can sometimes be ~10, which is insufficient to produce reliable results, especially with feature vector sizes of ~100. As can be seen from the plot, the three ML models produced similar accuracies.
 
-Below, we list the top player matchups where a player who has never played an opponent is expected to benefit from a risky strategy, ranked by the mean classification probability probability from of all three machine learning models. 
+Below, we list the top player matchups where a player who has never played an opponent is expected to benefit from a risky strategy, ranked by the mean classification probability probability from all three machine learning models. 
 
 ![](/data_visualizations/model_av_strat_predictions_table.png?raw=true)
 
