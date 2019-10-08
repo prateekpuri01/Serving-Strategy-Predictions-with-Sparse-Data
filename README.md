@@ -1,4 +1,4 @@
-# ATP_ML_strategy_predictions_sparse_data
+# ATP ML serving strategy predictions with sparse data
 
 In this repository, I detail a recent project where I constructed a machine learning model to predict what serving strategy is optimal for a given ATP player, even when playing an opponent he has never faced before. 
 
